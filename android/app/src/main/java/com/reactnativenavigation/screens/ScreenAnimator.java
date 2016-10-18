@@ -15,12 +15,13 @@ import com.reactnativenavigation.utils.ViewUtils;
 import javax.annotation.Nullable;
 
 public class ScreenAnimator {
-    private final float translationY;
+    private final float translationX, translationY;
     private Screen screen;
 
     public ScreenAnimator(Screen screen) {
         this.screen = screen;
         translationY = 0.08f * ViewUtils.getScreenHeight();
+        translationX = 1.f * ViewUtils.getScreenWidth();
     }
 
     public void show(boolean animate, final Runnable onAnimationEnd) {
@@ -50,16 +51,12 @@ public class ScreenAnimator {
     }
 
     private Animator createShowAnimator(final @Nullable Runnable onAnimationEnd) {
-        ObjectAnimator alpha = ObjectAnimator.ofFloat(screen, View.ALPHA, 0, 1);
-        alpha.setInterpolator(new DecelerateInterpolator());
-        alpha.setDuration(200);
-
-        ObjectAnimator translationY = ObjectAnimator.ofFloat(screen, View.TRANSLATION_Y, this.translationY, 0);
-        translationY.setInterpolator(new DecelerateInterpolator());
-        translationY.setDuration(280);
+        ObjectAnimator translationX = ObjectAnimator.ofFloat(screen, View.TRANSLATION_X, this.translationX, 0);
+        translationX.setInterpolator(new DecelerateInterpolator());
+        translationX.setDuration(200);
 
         AnimatorSet set = new AnimatorSet();
-        set.playTogether(translationY, alpha);
+        set.playTogether(translationX);
         set.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -77,17 +74,12 @@ public class ScreenAnimator {
     }
 
     private Animator createHideAnimator(final Runnable onAnimationEnd) {
-        ObjectAnimator alpha = ObjectAnimator.ofFloat(screen, View.ALPHA, 0);
-        alpha.setInterpolator(new LinearInterpolator());
-        alpha.setStartDelay(100);
-        alpha.setDuration(150);
-
-        ObjectAnimator translationY = ObjectAnimator.ofFloat(screen, View.TRANSLATION_Y, this.translationY);
-        translationY.setInterpolator(new AccelerateInterpolator());
-        translationY.setDuration(250);
+        ObjectAnimator translationX = ObjectAnimator.ofFloat(screen, View.TRANSLATION_X, this.translationX);
+        translationX.setInterpolator(new DecelerateInterpolator());
+        translationX.setDuration(200);
 
         AnimatorSet set = new AnimatorSet();
-        set.playTogether(translationY, alpha);
+        set.playTogether(translationX);
         set.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -95,5 +87,30 @@ public class ScreenAnimator {
             }
         });
         return set;
+    }
+
+    public void showModal() {
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(screen, View.ALPHA, 0, 1);
+        alpha.setInterpolator(new DecelerateInterpolator());
+        alpha.setDuration(200);
+
+        ObjectAnimator translationY = ObjectAnimator.ofFloat(screen, View.TRANSLATION_Y, this.translationY, 0);
+        translationY.setInterpolator(new DecelerateInterpolator());
+        translationY.setDuration(280);
+
+
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(translationY);
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                screen.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+            }
+        });
+        set.start();
     }
 }

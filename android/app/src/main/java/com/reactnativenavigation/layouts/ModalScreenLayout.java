@@ -17,6 +17,9 @@ public class ModalScreenLayout extends SingleScreenLayout {
 
     @Override
     protected void pushInitialScreen(LayoutParams lp) {
-        stack.pushInitialScreenWithAnimation(screenParams, lp);
+//        stack.pushInitialScreenWithAnimation(screenParams, lp);
+        // lkj --->
+        stack.pushInitialModalScreenWithAnimation(screenParams, lp);
+        // ]
     }
 }

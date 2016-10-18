@@ -204,6 +204,11 @@ public abstract class Screen extends RelativeLayout implements Subscriber {
         screenAnimator.show(animated);
     }
 
+    // lkj:add:061019
+    public void showModal() {
+        screenAnimator.showModal();
+    }
+
     public void show(boolean animated, Runnable onAnimationEnd) {
         setStyle();
         screenAnimator.show(animated, onAnimationEnd);
@@ -226,4 +231,6 @@ public abstract class Screen extends RelativeLayout implements Subscriber {
         unmountReactView();
         EventBus.instance.unregister(this);
     }
+
+
 }
