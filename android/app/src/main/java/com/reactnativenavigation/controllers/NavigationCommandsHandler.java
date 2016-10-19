@@ -158,6 +158,14 @@ public class NavigationCommandsHandler {
     }
 
     public static void showModal(Bundle params) {
+        showModalWithType(params, Modal.Type.Modal);
+    }
+
+    public static void showOverlay(Bundle params) {
+        showModalWithType(params, Modal.Type.Overlay);
+    }
+
+    private static void showModalWithType(Bundle params, final Modal.Type type) {
         final NavigationActivity currentActivity = NavigationActivity.currentActivity;
         if (currentActivity == null) {
             return;
@@ -168,7 +176,7 @@ public class NavigationCommandsHandler {
         NavigationApplication.instance.runOnMainThread(new Runnable() {
             @Override
             public void run() {
-                currentActivity.showModal(screenParams);
+                currentActivity.showModal(screenParams, type);
             }
         });
     }

@@ -321,6 +321,25 @@ function showModal(params) {
   newPlatformSpecific.showModal(adapted);
 }
 
+// duplicate from showModal
+function showOverlay(params) {
+  addNavigatorParams(params);
+  addNavigatorButtons(params);
+  addTitleBarBackButtonIfNeeded(params);
+  addNavigationStyleParams(params);
+
+  /*
+   * adapt to new API
+   */
+  adaptTopTabs(params, params.navigatorID);
+  params.screenId = params.screen;
+  let adapted = adaptNavigationStyleToScreenStyle(params);
+  adapted = adaptNavigationParams(adapted);
+  adapted.overrideBackPress = params.overrideBackPress;
+
+  newPlatformSpecific.showOverlay(adapted);
+}
+
 function dismissModal() {
   newPlatformSpecific.dismissTopModal();
 }
@@ -498,6 +517,7 @@ export default {
   navigatorPopToRoot,
   navigatorResetTo,
   showModal,
+  showOverlay,
   dismissModal,
   dismissAllModals,
   navigatorSetButtons,

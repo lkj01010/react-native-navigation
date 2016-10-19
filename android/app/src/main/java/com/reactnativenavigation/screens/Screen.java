@@ -209,6 +209,10 @@ public abstract class Screen extends RelativeLayout implements Subscriber {
         screenAnimator.showModal();
     }
 
+    public void showOverlay() {
+        screenAnimator.showOverlay();
+    }
+
     public void show(boolean animated, Runnable onAnimationEnd) {
         setStyle();
         screenAnimator.show(animated, onAnimationEnd);

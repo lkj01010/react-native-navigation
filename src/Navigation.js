@@ -98,6 +98,10 @@ function showModal(params = {}) {
   return platformSpecific.showModal(params);
 }
 
+function showOverlay(params = {}) {
+  return platformSpecific.showOverlay(params);
+}
+
 function dismissModal(params = {}) {
   return platformSpecific.dismissModal(params);
 }
@@ -134,6 +138,7 @@ export default {
   getRegisteredScreen,
   registerComponent,
   showModal: showModal,
+  showOverlay: showOverlay,
   dismissModal: dismissModal,
   dismissAllModals: dismissAllModals,
   showLightBox: showLightBox,

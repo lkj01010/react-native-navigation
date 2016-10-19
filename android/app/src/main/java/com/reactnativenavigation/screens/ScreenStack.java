@@ -78,6 +78,19 @@ public class ScreenStack {
         });
     }
 
+    public void pushInitialOverlayScreenWithAnimation(final ScreenParams initialScreenParams, LayoutParams params) {
+        isStackVisible = true;
+        pushInitialScreen(initialScreenParams, params);
+        final Screen screen = stack.peek();
+        screen.setOnDisplayListener(new Screen.OnDisplayListener() {
+            @Override
+            public void onDisplay() {
+                screen.showOverlay();
+                screen.setStyle();
+            }
+        });
+    }
+
     public void pushInitialScreen(ScreenParams initialScreenParams, LayoutParams params) {
         Screen initialScreen = ScreenFactory.create(activity, initialScreenParams, leftButtonOnClickListener);
         initialScreen.setVisibility(View.INVISIBLE);

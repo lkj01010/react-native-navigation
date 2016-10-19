@@ -10,6 +10,7 @@ import com.facebook.react.bridge.Callback;
 import com.reactnativenavigation.R;
 import com.reactnativenavigation.layouts.Layout;
 import com.reactnativenavigation.layouts.ModalScreenLayout;
+import com.reactnativenavigation.layouts.OverlaylScreenLayout;
 import com.reactnativenavigation.layouts.ScreenStackContainer;
 import com.reactnativenavigation.params.ContextualMenuParams;
 import com.reactnativenavigation.params.ScreenParams;
@@ -20,10 +21,15 @@ import java.util.List;
 
 public class Modal extends Dialog implements DialogInterface.OnDismissListener, ScreenStackContainer {
 
+    public enum Type {
+        Modal, Overlay
+    }
+
     private final AppCompatActivity activity;
     private final OnModalDismissedListener onModalDismissedListener;
     private final ScreenParams screenParams;
     private Layout layout;
+    private Type type;
 
     public void setTopBarVisible(String screenInstanceId, boolean hidden, boolean animated) {
         layout.setTopBarVisible(screenInstanceId, hidden, animated);
@@ -68,10 +74,11 @@ public class Modal extends Dialog implements DialogInterface.OnDismissListener, 
         void onModalDismissed(Modal modal);
     }
 
-    public Modal(AppCompatActivity activity, OnModalDismissedListener onModalDismissedListener, ScreenParams screenParams) {
+    public Modal(AppCompatActivity activity, OnModalDismissedListener onModalDismissedListener, Type type, ScreenParams screenParams) {
         super(activity, R.style.Modal);
         this.activity = activity;
         this.onModalDismissedListener = onModalDismissedListener;
+        this.type = type;
         this.screenParams = screenParams;
         createContent();
     }
@@ -84,7 +91,12 @@ public class Modal extends Dialog implements DialogInterface.OnDismissListener, 
         setCancelable(true);
         setOnDismissListener(this);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        layout = new ModalScreenLayout(getActivity(), null, screenParams, this);
+        if (this.type == Modal.Type.Modal) {
+            layout = new ModalScreenLayout(getActivity(), null, screenParams, this);
+        }
+        else {
+            layout = new OverlaylScreenLayout(getActivity(), null, screenParams, this);
+        }
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         setContentView(layout.asView());
     }

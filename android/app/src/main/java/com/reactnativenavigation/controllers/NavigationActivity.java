@@ -170,8 +170,8 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
         }
     }
 
-    void showModal(ScreenParams screenParams) {
-        modalController.showModal(screenParams);
+    void showModal(ScreenParams screenParams, Modal.Type type) {
+        modalController.showModal(screenParams, type);
     }
 
     void dismissTopModal() {

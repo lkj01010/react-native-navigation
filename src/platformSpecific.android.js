@@ -53,6 +53,11 @@ function showModal(screenParams) {
   NativeReactModule.showModal(screenParams);
 }
 
+function showOverlay(screenParams) {
+  savePassProps(screenParams);
+  NativeReactModule.showOverlay(screenParams);
+}
+
 function dismissTopModal() {
   NativeReactModule.dismissTopModal();
 }
@@ -140,6 +145,7 @@ module.exports = {
   setScreenTitleBarSubtitle,
   setScreenTitleBarButtons,
   showModal,
+  showOverlay,
   dismissTopModal,
   dismissAllModals,
   toggleSideMenuVisible,

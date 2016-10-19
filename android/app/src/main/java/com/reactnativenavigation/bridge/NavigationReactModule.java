@@ -159,6 +159,11 @@ public class NavigationReactModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void showOverlay(final ReadableMap params) {
+        NavigationCommandsHandler.showOverlay(BundleConverter.toBundle(params));
+    }
+
+    @ReactMethod
     public void dismissAllModals() {
         NavigationCommandsHandler.dismissAllModals();
     }
