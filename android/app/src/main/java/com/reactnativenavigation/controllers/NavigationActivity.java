@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.widget.RelativeLayout;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
@@ -16,6 +17,7 @@ import com.reactnativenavigation.events.Subscriber;
 import com.reactnativenavigation.layouts.BottomTabsLayout;
 import com.reactnativenavigation.layouts.Layout;
 import com.reactnativenavigation.layouts.LayoutFactory;
+import com.reactnativenavigation.layouts.SingleScreenLayout;
 import com.reactnativenavigation.params.ActivityParams;
 import com.reactnativenavigation.params.ContextualMenuParams;
 import com.reactnativenavigation.params.ScreenParams;
@@ -23,6 +25,7 @@ import com.reactnativenavigation.params.SnackbarParams;
 import com.reactnativenavigation.params.TitleBarButtonParams;
 import com.reactnativenavigation.params.TitleBarLeftButtonParams;
 import com.reactnativenavigation.react.JsDevReloadHandler;
+import com.reactnativenavigation.screens.SingleScreen;
 
 import java.util.List;
 
@@ -40,6 +43,8 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
 
     private ActivityParams activityParams;
     private ModalController modalController;
+    private HoBoxController hoBoxController;
+    private SingleScreenLayout boxLayout;
     private Layout layout;
 
     @Override
@@ -56,6 +61,7 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
         disableActivityShowAnimationIfNeeded();
         createLayout();
         createModalController();
+        createBoxLayoutController();
     }
 
     private void disableActivityShowAnimationIfNeeded() {
@@ -71,6 +77,12 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     private void createLayout() {
         layout = LayoutFactory.create(this, activityParams);
         setContentView(layout.asView());
+    }
+
+    private void createBoxLayoutController() {
+//        boxLayout = new SingleScreenLayout(this, null, activityParams.screenParams);
+        hoBoxController = new HoBoxController(this);
+        ((RelativeLayout)layout).addView(hoBoxController.asView);
     }
 
     @Override
@@ -103,6 +115,9 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     private void destroyLayouts() {
         if (modalController != null) {
             modalController.destroy();
+        }
+        if (hoBoxController != null) {
+            hoBoxController.destroy();
         }
         if (layout != null) {
             layout.destroy();
@@ -181,6 +196,13 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     void dismissAllModals() {
         modalController.dismissAllModals();
     }
+
+    //////////////////////////////////////////////////
+    void showBox(ScreenParams screenParams) {
+
+    }
+
+    //////////////////////////////////////////////////
 
     //TODO all these setters should be combined to something like setStyle
     void setTopBarVisible(String screenInstanceId, boolean hidden, boolean animated) {
