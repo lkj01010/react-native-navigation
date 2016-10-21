@@ -58,6 +58,7 @@ public class StyleParamsParser {
         result.navigationBarColor = getColor("navigationBarColor", getDefaultNavigationColor());
         result.forceTitlesDisplay = getBoolean("forceTitlesDisplay", getDefaultForceTitlesDisplay());
 
+        result.navigationAnimType = getAnimType("navigationAnimType");
         return result;
     }
 
@@ -186,5 +187,22 @@ public class StyleParamsParser {
         return params.containsKey(selectedTopTabIndicatorHeight) ?
                 (int) params.getDouble(selectedTopTabIndicatorHeight) :
                 defaultSelectedTopTabIndicatorHeight;
+    }
+
+    private StyleParams.AnimType getAnimType(String key) {
+        if (params.containsKey(key)) {
+            String animStr = params.getString(key);
+            if (animStr.equals("right")) {
+                return StyleParams.AnimType.RIGHT;
+            }
+            else if (animStr.equals("up")) {
+                return StyleParams.AnimType.UP;
+            } else {
+                return StyleParams.AnimType.NONE;
+            }
+        }
+        else {
+            return StyleParams.AnimType.RIGHT;
+        }
     }
 }

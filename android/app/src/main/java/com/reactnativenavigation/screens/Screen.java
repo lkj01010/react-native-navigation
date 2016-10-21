@@ -50,7 +50,7 @@ public abstract class Screen extends RelativeLayout implements Subscriber {
         this.screenParams = screenParams;
         styleParams = screenParams.styleParams;
         this.leftButtonOnClickListener = leftButtonOnClickListener;
-        screenAnimator = new ScreenAnimator(this);
+        screenAnimator = new ScreenAnimator(this, styleParams.navigationAnimType);
         createViews();
         EventBus.instance.register(this);
     }
@@ -59,23 +59,25 @@ public abstract class Screen extends RelativeLayout implements Subscriber {
     public void onEvent(Event event) {
         if (ContextualMenuHiddenEvent.TYPE.equals(event.getType()) && isShown()) {
             setStyle();
-            topBar.onContextualMenuHidden();
+            if (topBar != null) topBar.onContextualMenuHidden();
         }
         if (ViewPagerScreenChangedEvent.TYPE.equals(event.getType()) && isShown() ) {
             setStyle();
-            topBar.dismissContextualMenu();
+            if (topBar != null) topBar.dismissContextualMenu();
         }
     }
 
     public void setStyle() {
         setStatusBarColor(styleParams.statusBarColor);
         setNavigationBarColor(styleParams.navigationBarColor);
-        topBar.setStyle(styleParams);
+        if (topBar != null) topBar.setStyle(styleParams);
     }
 
     private void createViews() {
-        createTopBar();
-        createTitleBar();
+        if (!screenParams.styleParams.titleBarHidden) {
+            createTopBar();
+            createTitleBar();
+        }
         createContent();
     }
 
@@ -202,11 +204,6 @@ public abstract class Screen extends RelativeLayout implements Subscriber {
 
     public void show(boolean animated) {
         screenAnimator.show(animated);
-    }
-
-    // lkj:add:061019
-    public void showModal() {
-        screenAnimator.showModal();
     }
 
     public void show(boolean animated, Runnable onAnimationEnd) {

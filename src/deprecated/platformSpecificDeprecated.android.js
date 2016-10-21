@@ -146,7 +146,8 @@ function convertStyleParams(originalStyleObject) {
     bottomTabBadgeTextColor: originalStyleObject.bottomTabBadgeTextColor,
     bottomTabBadgeBackgroundColor: originalStyleObject.bottomTabBadgeBackgroundColor,
 
-    navigationBarColor: originalStyleObject.navigationBarColor
+    navigationBarColor: originalStyleObject.navigationBarColor,
+    navigationAnimType: originalStyleObject.animType,
   }
 }
 
@@ -319,6 +320,24 @@ function showModal(params) {
   adapted.overrideBackPress = params.overrideBackPress;
 
   newPlatformSpecific.showModal(adapted);
+}
+
+function showOverlay(params) {
+  addNavigatorParams(params);
+  addNavigatorButtons(params);
+  addTitleBarBackButtonIfNeeded(params);
+  addNavigationStyleParams(params);
+
+  /*
+   * adapt to new API
+   */
+  adaptTopTabs(params, params.navigatorID);
+  params.screenId = params.screen;
+  let adapted = adaptNavigationStyleToScreenStyle(params);
+  adapted = adaptNavigationParams(adapted);
+  adapted.overrideBackPress = params.overrideBackPress;
+
+  newPlatformSpecific.showOverlay(adapted);
 }
 
 function dismissModal() {
@@ -498,6 +517,7 @@ export default {
   navigatorPopToRoot,
   navigatorResetTo,
   showModal,
+  showOverlay,
   dismissModal,
   dismissAllModals,
   navigatorSetButtons,

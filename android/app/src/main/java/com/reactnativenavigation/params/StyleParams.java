@@ -35,6 +35,10 @@ public class StyleParams {
         }
     }
 
+    public enum AnimType {
+        RIGHT, UP, NONE
+    }
+
     public Color statusBarColor;
     public Color contextualMenuStatusBarColor;
     public Color contextualMenuButtonsColor;
@@ -73,4 +77,6 @@ public class StyleParams {
     public Color bottomTabBadgeBackgroundColor;
 
     public Color navigationBarColor;
+
+    public AnimType navigationAnimType;
 }

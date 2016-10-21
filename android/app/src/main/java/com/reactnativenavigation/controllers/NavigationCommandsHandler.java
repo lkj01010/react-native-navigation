@@ -173,6 +173,22 @@ public class NavigationCommandsHandler {
         });
     }
 
+    public static void showOverlay(Bundle params) {
+        final NavigationActivity currentActivity = NavigationActivity.currentActivity;
+        if (currentActivity == null) {
+            return;
+        }
+
+        final ScreenParams screenParams = ScreenParamsParser.parse(params);
+
+        NavigationApplication.instance.runOnMainThread(new Runnable() {
+            @Override
+            public void run() {
+                currentActivity.showOverlay(screenParams);
+            }
+        });
+    }
+
     public static void setScreenTitleBarRightButtons(final String screenInstanceId,
                                                      final String navigatorEventId,
                                                      final List<TitleBarButtonParams> titleBarButtons) {

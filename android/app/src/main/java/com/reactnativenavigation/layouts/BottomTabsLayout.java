@@ -197,6 +197,9 @@ public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottom
 
     @Override
     public void onModalDismissed() {
+        if (getCurrentScreenStack().peek() == null) {
+            return;
+        }
         EventBus.instance.post(new ScreenChangedEvent(getCurrentScreenStack().peek().getScreenParams()));
     }
 

@@ -64,20 +64,6 @@ public class ScreenStack {
         });
     }
 
-    // lkj:add:061019
-    public void pushInitialModalScreenWithAnimation(final ScreenParams initialScreenParams, LayoutParams params) {
-        isStackVisible = true;
-        pushInitialScreen(initialScreenParams, params);
-        final Screen screen = stack.peek();
-        screen.setOnDisplayListener(new Screen.OnDisplayListener() {
-            @Override
-            public void onDisplay() {
-                screen.showModal();
-                screen.setStyle();
-            }
-        });
-    }
-
     public void pushInitialScreen(ScreenParams initialScreenParams, LayoutParams params) {
         Screen initialScreen = ScreenFactory.create(activity, initialScreenParams, leftButtonOnClickListener);
         initialScreen.setVisibility(View.INVISIBLE);
@@ -168,7 +154,11 @@ public class ScreenStack {
     }
 
     public Screen peek() {
-        return stack.peek();
+        if (stack.size() > 0) { // fix crush when reloadJS with modal open
+            return stack.peek();
+        } else {
+            return null;
+        }
     }
 
     private void readdPrevious(Screen previous) {

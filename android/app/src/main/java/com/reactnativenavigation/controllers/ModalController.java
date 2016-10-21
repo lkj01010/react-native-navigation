@@ -32,7 +32,13 @@ public class ModalController implements ScreenStackContainer, Modal.OnModalDismi
     }
 
     public void showModal(ScreenParams screenParams) {
-        Modal modal = new Modal(activity, this, screenParams);
+        Modal modal = new Modal(activity, this, screenParams, true);
+        modal.show();
+        stack.add(modal);
+    }
+
+    public void showOverlay(ScreenParams screenParams) {
+        Modal modal = new Modal(activity, this, screenParams, false);
         modal.show();
         stack.add(modal);
     }
