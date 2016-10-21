@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.widget.RelativeLayout;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
@@ -16,6 +17,7 @@ import com.reactnativenavigation.events.Subscriber;
 import com.reactnativenavigation.layouts.BottomTabsLayout;
 import com.reactnativenavigation.layouts.Layout;
 import com.reactnativenavigation.layouts.LayoutFactory;
+import com.reactnativenavigation.layouts.SingleScreenLayout;
 import com.reactnativenavigation.params.ActivityParams;
 import com.reactnativenavigation.params.ContextualMenuParams;
 import com.reactnativenavigation.params.ScreenParams;
@@ -41,6 +43,7 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     private ActivityParams activityParams;
     private ModalController modalController;
     private Layout layout;
+    private SingleScreenLayout overScreenLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,9 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     private void createLayout() {
         layout = LayoutFactory.create(this, activityParams);
         setContentView(layout.asView());
+
+        overScreenLayout = new SingleScreenLayout(this, null, null);
+        ((RelativeLayout) layout).addView(overScreenLayout);
     }
 
     @Override
@@ -171,16 +177,32 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     }
 
     void showModal(ScreenParams screenParams) {
-        modalController.showModal(screenParams);
+        if (overScreenLayout.stackSize() == 0 && layout instanceof BottomTabsLayout) {
+            ((BottomTabsLayout)layout).hideTabs();
+        }
+        overScreenLayout.push(screenParams);
     }
+
+//    void showModal(ScreenParams screenParams) {
+//        modalController.showModal(screenParams);
+//    }
 
     void showOverlay(ScreenParams screenParams) {
         modalController.showOverlay(screenParams);
     }
 
     void dismissTopModal() {
-        modalController.dismissTopModal();
+        ScreenParams sp = new ScreenParams();
+        sp.animateScreenTransitions = true;
+        overScreenLayout.pop(sp);
+        if (overScreenLayout.stackSize() == 0 && layout instanceof BottomTabsLayout) {
+            ((BottomTabsLayout)layout).showTabs();
+        }
     }
+
+//    void dismissTopModal() {
+//        modalController.dismissTopModal();
+//    }
 
     void dismissAllModals() {
         modalController.dismissAllModals();

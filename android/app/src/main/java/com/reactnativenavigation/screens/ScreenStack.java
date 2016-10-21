@@ -71,6 +71,11 @@ public class ScreenStack {
     }
 
     public void push(final ScreenParams params, LayoutParams layoutParams) {
+        if (stack.empty()) {
+            pushInitialScreenWithAnimation(params, layoutParams);
+            return;
+        }
+
         Screen nextScreen = ScreenFactory.create(activity, params, leftButtonOnClickListener);
         final Screen previousScreen = stack.peek();
         if (isStackVisible) {
@@ -116,24 +121,58 @@ public class ScreenStack {
     }
 
     public void pop(final boolean animated, @Nullable final OnScreenPop onScreenPop) {
-        if (!canPop()) {
-            return;
+        if (navigatorId == "overScreen" && stack.size() == 1) {
+            final Screen toRemove = stack.pop();
+            if (keyboardVisibilityDetector.isKeyboardVisible()) {
+                keyboardVisibilityDetector.setKeyboardCloseListener(new Runnable() {
+                    @Override
+                    public void run() {
+                        keyboardVisibilityDetector.setKeyboardCloseListener(null);
+                        popRootScreen(animated, toRemove, onScreenPop);
+                    }
+                });
+                keyboardVisibilityDetector.closeKeyboard();
+            } else {
+                popRootScreen(animated, toRemove, onScreenPop);
+            }
         }
 
-        final Screen toRemove = stack.pop();
-        final Screen previous = stack.peek();
+        // origin code:
+        else {
+            if (!canPop()) {
+                return;
+            }
 
-        if (keyboardVisibilityDetector.isKeyboardVisible()) {
-            keyboardVisibilityDetector.setKeyboardCloseListener(new Runnable() {
-                @Override
-                public void run() {
-                    keyboardVisibilityDetector.setKeyboardCloseListener(null);
-                    swapScreens(animated, toRemove, previous, onScreenPop);
-                }
-            });
-            keyboardVisibilityDetector.closeKeyboard();
-        } else {
-            swapScreens(animated, toRemove, previous, onScreenPop);
+            final Screen toRemove = stack.pop();
+            final Screen previous = stack.peek();
+
+            if (keyboardVisibilityDetector.isKeyboardVisible()) {
+                keyboardVisibilityDetector.setKeyboardCloseListener(new Runnable() {
+                    @Override
+                    public void run() {
+                        keyboardVisibilityDetector.setKeyboardCloseListener(null);
+                        swapScreens(animated, toRemove, previous, onScreenPop);
+                    }
+                });
+                keyboardVisibilityDetector.closeKeyboard();
+            } else {
+                swapScreens(animated, toRemove, previous, onScreenPop);
+            }
+        }
+
+    }
+
+    private void popRootScreen(boolean animated, final Screen toRemove, OnScreenPop onScreenPop) {
+        toRemove.hide(animated, new Runnable() {
+            @Override
+            public void run() {
+                toRemove.unmountReactView();
+                parent.removeView(toRemove);
+            }
+        });
+
+        if (onScreenPop != null) {
+            onScreenPop.onScreenPopAnimationEnd();
         }
     }
 

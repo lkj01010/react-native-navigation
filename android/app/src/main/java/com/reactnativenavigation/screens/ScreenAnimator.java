@@ -23,7 +23,7 @@ public class ScreenAnimator {
     public ScreenAnimator(Screen screen, StyleParams.AnimType animType) {
         this.screen = screen;
         this.animType = animType;
-        translationY = 0.08f * ViewUtils.getScreenHeight();
+        translationY = 1.f * ViewUtils.getScreenHeight();
         translationX = 1.f * ViewUtils.getScreenWidth();
     }
 
@@ -89,24 +89,28 @@ public class ScreenAnimator {
     }
 
     private Animator createHideAnimator(final Runnable onAnimationEnd) {
-        ObjectAnimator translation;
-        if (this.animType == StyleParams.AnimType.RIGHT) {
-            translation = ObjectAnimator.ofFloat(screen, View.TRANSLATION_X, this.translationX);
-            translation.setInterpolator(new DecelerateInterpolator());
-            translation.setDuration(200);
-        } else { // (this.animType == StyleParams.AnimType.UP)
+        AnimatorSet set = new AnimatorSet();
 
-            translation = ObjectAnimator.ofFloat(screen, View.TRANSLATION_Y, this.translationY);
+        if (this.animType == StyleParams.AnimType.RIGHT) {
+            ObjectAnimator translation = ObjectAnimator.ofFloat(screen, View.TRANSLATION_X, this.translationX);
             translation.setInterpolator(new DecelerateInterpolator());
             translation.setDuration(200);
+
+            set.playTogether(translation);
+
+        } else { // (this.animType == StyleParams.AnimType.UP)
+//            ObjectAnimator alpha = ObjectAnimator.ofFloat(screen, View.ALPHA, 1, 0);
+//            alpha.setInterpolator(new DecelerateInterpolator());
+//            alpha.setStartDelay(350);
+//            alpha.setDuration(150);
+
+            ObjectAnimator translation = ObjectAnimator.ofFloat(screen, View.TRANSLATION_Y, this.translationY);
+            translation.setInterpolator(new DecelerateInterpolator());
+            translation.setDuration(300);
+
+            set.playTogether( translation);
         }
 
-//        ObjectAnimator translationX = ObjectAnimator.ofFloat(screen, View.TRANSLATION_X, this.translationX);
-//        translationX.setInterpolator(new DecelerateInterpolator());
-//        translationX.setDuration(200);
-
-        AnimatorSet set = new AnimatorSet();
-        set.playTogether(translation);
         set.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {

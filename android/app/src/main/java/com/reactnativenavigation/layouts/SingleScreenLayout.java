@@ -34,7 +34,7 @@ public class SingleScreenLayout extends RelativeLayout implements Layout {
     protected LeftButtonOnClickListener leftButtonOnClickListener;
     private @Nullable SideMenu sideMenu;
 
-    public SingleScreenLayout(AppCompatActivity activity, @Nullable SideMenuParams sideMenuParams, ScreenParams screenParams) {
+    public SingleScreenLayout(AppCompatActivity activity, @Nullable SideMenuParams sideMenuParams, @Nullable ScreenParams screenParams) {
         super(activity);
         this.activity = activity;
         this.screenParams = screenParams;
@@ -50,7 +50,9 @@ public class SingleScreenLayout extends RelativeLayout implements Layout {
             createStack(getScreenStackParent());
         }
         createFabAndSnackbarContainer();
-        sendScreenChangedEventAfterInitialPush();
+        if (screenParams != null) {
+            sendScreenChangedEventAfterInitialPush();
+        }
     }
 
     private RelativeLayout getScreenStackParent() {
@@ -68,9 +70,21 @@ public class SingleScreenLayout extends RelativeLayout implements Layout {
         if (stack != null) {
             stack.destroy();
         }
+
+        // for empty stack
+        if (screenParams == null) {
+            stack = new ScreenStack(activity, parent, "overScreen", this);
+            return;
+        }
+        // ]]
+
         stack = new ScreenStack(activity, parent, screenParams.getNavigatorId(), this);
         LayoutParams lp = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
         pushInitialScreen(lp);
+    }
+
+    public int stackSize() {
+        return stack.getStackSize();
     }
 
     protected void pushInitialScreen(LayoutParams lp) {
@@ -128,7 +142,9 @@ public class SingleScreenLayout extends RelativeLayout implements Layout {
     @Override
     public void pop(ScreenParams params) {
         stack.pop(params.animateScreenTransitions);
-        EventBus.instance.post(new ScreenChangedEvent(stack.peek().getScreenParams()));
+        if (stack.peek() != null) {
+            EventBus.instance.post(new ScreenChangedEvent(stack.peek().getScreenParams()));
+        }
     }
 
     @Override

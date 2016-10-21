@@ -303,6 +303,14 @@ public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottom
         bottomTabs.setStyleFromScreen(newStack.getCurrentScreenStyleParams());
     }
 
+    public void hideTabs() {
+        bottomTabs.setVisibility(true, true);
+    }
+
+    public void showTabs() {
+        bottomTabs.setVisibility(false, true);
+    }
+
     private void hideCurrentStack() {
         ScreenStack currentScreenStack = getCurrentScreenStack();
         currentScreenStack.hide();
