@@ -186,6 +186,10 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
         modalController.dismissAllModals();
     }
 
+    void dismissOverlay() {
+        modalController.dismissOverlay();
+    }
+
     //TODO all these setters should be combined to something like setStyle
     void setTopBarVisible(String screenInstanceId, boolean hidden, boolean animated) {
         layout.setTopBarVisible(screenInstanceId, hidden, animated);

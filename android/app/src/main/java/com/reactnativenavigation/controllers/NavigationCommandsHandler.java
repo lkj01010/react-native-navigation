@@ -249,6 +249,20 @@ public class NavigationCommandsHandler {
         });
     }
 
+    public static void dismissOverlay() {
+        final NavigationActivity currentActivity = NavigationActivity.currentActivity;
+        if (currentActivity == null) {
+            return;
+        }
+
+        NavigationApplication.instance.runOnMainThread(new Runnable() {
+            @Override
+            public void run() {
+                currentActivity.dismissOverlay();
+            }
+        });
+    }
+
     public static void toggleSideMenuVisible(final boolean animated) {
         final NavigationActivity currentActivity = NavigationActivity.currentActivity;
         if (currentActivity == null) {

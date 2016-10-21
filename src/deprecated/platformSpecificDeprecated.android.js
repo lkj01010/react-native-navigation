@@ -348,6 +348,10 @@ function dismissAllModals(params) {
   newPlatformSpecific.dismissAllModals();
 }
 
+function dismissOverlay() {
+  newPlatformSpecific.dismissOverlay();
+}
+
 function addNavigatorParams(screen, navigator = null, idx = '') {
   screen.navigatorID = navigator ? navigator.navigatorID : _.uniqueId('navigatorID') + '_nav' + idx;
   screen.screenInstanceID = _.uniqueId('screenInstanceID');
@@ -520,6 +524,7 @@ export default {
   showOverlay,
   dismissModal,
   dismissAllModals,
+  dismissOverlay,
   navigatorSetButtons,
   navigatorSetTabBadge,
   navigatorSetTitle,

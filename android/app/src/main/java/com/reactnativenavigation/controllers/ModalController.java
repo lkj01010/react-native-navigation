@@ -1,6 +1,7 @@
 package com.reactnativenavigation.controllers;
 
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
 
 import com.facebook.react.bridge.Callback;
 import com.reactnativenavigation.events.EventBus;
@@ -17,6 +18,7 @@ import java.util.Stack;
 public class ModalController implements ScreenStackContainer, Modal.OnModalDismissedListener {
     private final AppCompatActivity activity;
     private Stack<Modal> stack = new Stack<>();
+    private Modal overlay;
 
     public ModalController(AppCompatActivity activity) {
         this.activity = activity;
@@ -32,15 +34,18 @@ public class ModalController implements ScreenStackContainer, Modal.OnModalDismi
     }
 
     public void showModal(ScreenParams screenParams) {
-        Modal modal = new Modal(activity, this, screenParams, true);
+        Modal modal = new Modal(activity, this, screenParams);
+        modal.getWindow().setType(WindowManager.LayoutParams.TYPE_TOAST);
         modal.show();
         stack.add(modal);
     }
 
     public void showOverlay(ScreenParams screenParams) {
-        Modal modal = new Modal(activity, this, screenParams, false);
-        modal.show();
-        stack.add(modal);
+        if (overlay == null) {
+            overlay = new Modal(activity, this, screenParams);
+            overlay.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+            overlay.show();
+        }
     }
 
     public void dismissTopModal() {
@@ -54,6 +59,13 @@ public class ModalController implements ScreenStackContainer, Modal.OnModalDismi
             modal.dismiss();
         }
         stack.clear();
+    }
+
+    public void dismissOverlay() {
+        if (overlay != null) {
+            overlay.dismiss();
+            overlay = null;
+        }
     }
 
     public boolean isShowing() {
@@ -86,6 +98,7 @@ public class ModalController implements ScreenStackContainer, Modal.OnModalDismi
             modal.dismiss();
         }
         stack.clear();
+        dismissOverlay();
     }
 
     @Override

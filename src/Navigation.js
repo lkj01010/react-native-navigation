@@ -110,6 +110,10 @@ function dismissAllModals(params = {}) {
   return platformSpecific.dismissAllModals(params);
 }
 
+function dismissOverlay(params = {}) {
+  return platformSpecific.dismissOverlay(params);
+}
+
 function showLightBox(params = {}) {
   return platformSpecific.showLightBox(params);
 }
@@ -141,6 +145,7 @@ export default {
   showOverlay: showOverlay, // android
   dismissModal: dismissModal,
   dismissAllModals: dismissAllModals,
+  dismissOverlay: dismissOverlay, // android
   showLightBox: showLightBox,
   dismissLightBox: dismissLightBox,
   showInAppNotification: showInAppNotification,
