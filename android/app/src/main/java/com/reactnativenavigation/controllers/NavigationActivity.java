@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
+import com.facebook.react.modules.core.PermissionListener;
 import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.events.Event;
 import com.reactnativenavigation.events.EventBus;
@@ -28,6 +29,8 @@ import com.reactnativenavigation.react.JsDevReloadHandler;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 public class NavigationActivity extends AppCompatActivity implements DefaultHardwareBackBtnHandler, Subscriber {
 
     /**
@@ -38,12 +41,13 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
      * This is somewhat weird, and in the future we better use a single activity with changing contentView similar to ReactNative impl.
      * Along with that, we should handle commands from the bridge using onNewIntent
      */
-    static NavigationActivity currentActivity;
+    public static NavigationActivity currentActivity;
 
     private ActivityParams activityParams;
     private ModalController modalController;
     private Layout layout;
     private SingleScreenLayout overScreenLayout;
+    private @Nullable PermissionListener mPermissionListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -308,5 +312,25 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     private void handleJsDevReloadEvent() {
         modalController.destroy();
         layout.destroy();
+    }
+
+//    @Override
+    public void requestPermissions(
+            String[] permissions,
+            int requestCode,
+            PermissionListener listener) {
+        mPermissionListener = listener;
+        this.requestPermissions(permissions, requestCode);
+    }
+
+//    @Override
+    public void onRequestPermissionsResult(
+            int requestCode,
+            String[] permissions,
+            int[] grantResults) {
+        if (mPermissionListener != null &&
+                mPermissionListener.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            mPermissionListener = null;
+        }
     }
 }
