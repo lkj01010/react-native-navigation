@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.SoundEffectConstants;
 import android.widget.RelativeLayout;
 
 import com.facebook.react.bridge.Callback;
@@ -118,6 +119,10 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
             layout.destroy();
             layout = null;
         }
+        if(overScreenLayout != null) {
+            overScreenLayout.destroy();
+            overScreenLayout = null;
+        }
     }
 
     private void destroyJsIfNeeded() {
@@ -149,6 +154,7 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     }
 
     void push(ScreenParams params) {
+        overScreenLayout.playSoundEffect(SoundEffectConstants.CLICK);
         if (modalController.containsNavigator(params.getNavigatorId())) {
             modalController.push(params);
         } else {
@@ -157,6 +163,7 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     }
 
     void pop(ScreenParams params) {
+        overScreenLayout.playSoundEffect(SoundEffectConstants.CLICK);
         if (modalController.containsNavigator(params.getNavigatorId())) {
             modalController.pop(params);
         } else {
@@ -165,6 +172,7 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     }
 
     void popToRoot(ScreenParams params) {
+        overScreenLayout.playSoundEffect(SoundEffectConstants.CLICK);
         if (modalController.containsNavigator(params.getNavigatorId())) {
             modalController.popToRoot(params);
         } else {
@@ -181,6 +189,7 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     }
 
     void showModal(ScreenParams screenParams) {
+        overScreenLayout.playSoundEffect(SoundEffectConstants.CLICK);
         if (overScreenLayout.stackSize() == 0 && layout instanceof BottomTabsLayout) {
             ((BottomTabsLayout)layout).hideTabs();
         }
@@ -312,6 +321,7 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     private void handleJsDevReloadEvent() {
         modalController.destroy();
         layout.destroy();
+        overScreenLayout.destroy();
     }
 
 //    @Override
