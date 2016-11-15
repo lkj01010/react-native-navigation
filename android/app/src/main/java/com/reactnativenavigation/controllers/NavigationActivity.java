@@ -205,6 +205,7 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     }
 
     void dismissTopModal() {
+        overScreenLayout.playSoundEffect(SoundEffectConstants.CLICK);
         ScreenParams sp = new ScreenParams();
         sp.animateScreenTransitions = true;
         overScreenLayout.pop(sp);
