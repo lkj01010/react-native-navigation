@@ -7,11 +7,14 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.WritableMap;
 import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.events.EventBus;
 import com.reactnativenavigation.events.ScreenChangedEvent;
 import com.reactnativenavigation.params.ActivityParams;
+import com.reactnativenavigation.params.BaseScreenParams;
 import com.reactnativenavigation.params.ContextualMenuParams;
 import com.reactnativenavigation.params.ScreenParams;
 import com.reactnativenavigation.params.SideMenuParams;
@@ -289,6 +292,12 @@ public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottom
         
         hideCurrentStack();
         showNewStack(position);
+
+        BaseScreenParams screenParams = getCurrentScreenStack().peek().getScreenParams();
+
+        WritableMap data = Arguments.createMap();
+        data.putString("screen", screenParams.screenId);
+        NavigationApplication.instance.sendNavigatorEvent("onChangeScreen", data);
         EventBus.instance.post(new ScreenChangedEvent(getCurrentScreenStack().peek().getScreenParams()));
         return true;
     }
