@@ -5,6 +5,8 @@
 #import "RCCTheSideBarManagerViewController.h"
 #import "RCTRootView.h"
 #import "RCCManager.h"
+#import "RCTBridge.h"
+#import "RCTEventDispatcher.h"
 #import "RCTConvert.h"
 #import "RCCExternalViewControllerProtocol.h"
 
@@ -22,6 +24,7 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
 @property (nonatomic, strong) NSDictionary *originalNavBarImages;
 @property (nonatomic, strong) UIImageView *navBarHairlineImageView;
 @property (nonatomic, weak) id <UIGestureRecognizerDelegate> originalInteractivePopGestureDelegate;
+@property (nonatomic) NSString * screenId;
 @end
 
 @implementation RCCViewController
@@ -96,9 +99,10 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
 
 - (instancetype)initWithProps:(NSDictionary *)props children:(NSArray *)children globalProps:(NSDictionary *)globalProps bridge:(RCTBridge *)bridge
 {
+  
   NSString *component = props[@"component"];
   if (!component) return nil;
-
+  
   NSDictionary *passProps = props[@"passProps"];
   NSDictionary *navigatorStyle = props[@"style"];
 
@@ -112,6 +116,8 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
   if (!self) return nil;
 
   [self commonInit:reactView navigatorStyle:navigatorStyle props:props];
+
+  self.screenId = props[@"component"];
 
   return self;
 }
@@ -129,6 +135,7 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
 
   [self commonInit:reactView navigatorStyle:navigatorStyle props:passProps];
 
+  self.screenId = component;
   return self;
 }
 
@@ -176,6 +183,14 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
     [super viewWillAppear:animated];
     
     [self setStyleOnAppear];
+  
+  if( self.screenId != NULL )
+  {
+    [[[RCCManager sharedInstance] getBridge].eventDispatcher sendAppEventWithName:@"onChangeScreen" body:@
+     {
+       @"screen": self.screenId,
+     }];
+  }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
