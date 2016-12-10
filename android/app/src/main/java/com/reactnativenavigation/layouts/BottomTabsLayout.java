@@ -335,11 +335,11 @@ public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottom
     }
 
     public void setBottomTabBadgeByIndex(Integer index, String badge) {
-        bottomTabs.setNotification(badge, index);
+        bottomTabs.setNotification(badge.equals("0") ? "" : badge, index);
     }
 
     public void setBottomTabBadgeByNavigatorId(String navigatorId, String badge) {
-        bottomTabs.setNotification(badge, getScreenStackIndex(navigatorId));
+        bottomTabs.setNotification(badge.equals("0") ? "" : badge, getScreenStackIndex(navigatorId));
     }
 
     private int getScreenStackIndex(String navigatorId) throws ScreenStackNotFoundException {
