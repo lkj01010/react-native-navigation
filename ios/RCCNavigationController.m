@@ -6,6 +6,13 @@
 #import <objc/runtime.h>
 #import "RCCTitleViewHelper.h"
 
+static RCCNavigationController * s_currentNavigationController = NULL;
+static RCCNavigationController * s_firstNavigationController = NULL;
+
+@interface RCCNavigationController()
+@property (nonatomic) NSString * navId;
+@end
+
 @implementation RCCNavigationController
 
 NSString const *CALLBACK_ASSOCIATED_KEY = @"RCCNavigationController.CALLBACK_ASSOCIATED_KEY";
@@ -16,10 +23,13 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
   NSString *component = props[@"component"];
   if (!component) return nil;
   
+  self.navId = props[@"id"];
+  NSLog(@"nav id %@",self.navId);
+  
   NSDictionary *passProps = props[@"passProps"];
   NSDictionary *navigatorStyle = props[@"style"];
   
-  RCCViewController *viewController = [[RCCViewController alloc] initWithComponent:component passProps:passProps navigatorStyle:navigatorStyle globalProps:globalProps bridge:bridge];
+  RCCViewController *viewController = [[RCCViewController alloc] initWithComponent:component passProps:passProps navigatorStyle:navigatorStyle globalProps:globalProps bridge:bridge navigationController:self];
   if (!viewController) return nil;
   
   NSArray *leftButtons = props[@"leftButtons"];
@@ -43,12 +53,16 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
                    props:props
                    style:navigatorStyle];
   
+  if( s_firstNavigationController == NULL ) {
+    s_firstNavigationController = self;
+  }
   return self;
 }
 
 
 - (void)performAction:(NSString*)performAction actionParams:(NSDictionary*)actionParams bridge:(RCTBridge *)bridge
 {
+  NSLog(@"current navigation controller nav id %@",self.navId);
   BOOL animated = actionParams[@"animated"] ? [actionParams[@"animated"] boolValue] : YES;
   
   // push
@@ -81,7 +95,7 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
       navigatorStyle = mergedStyle;
     }
     
-    RCCViewController *viewController = [[RCCViewController alloc] initWithComponent:component passProps:passProps navigatorStyle:navigatorStyle globalProps:nil bridge:bridge];
+    RCCViewController *viewController = [[RCCViewController alloc] initWithComponent:component passProps:passProps navigatorStyle:navigatorStyle globalProps:nil bridge:bridge navigationController:self];
     
     [self processTitleView:viewController
                      props:actionParams
@@ -152,7 +166,7 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
     NSDictionary *passProps = actionParams[@"passProps"];
     NSDictionary *navigatorStyle = actionParams[@"style"];
     
-    RCCViewController *viewController = [[RCCViewController alloc] initWithComponent:component passProps:passProps navigatorStyle:navigatorStyle globalProps:nil bridge:bridge];
+    RCCViewController *viewController = [[RCCViewController alloc] initWithComponent:component passProps:passProps navigatorStyle:navigatorStyle globalProps:nil bridge:bridge navigationController:self];
     
     [self processTitleView:viewController
                      props:actionParams
@@ -298,5 +312,22 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
   
 }
 
+
++ (void) setCurrentNavigationController:(RCCNavigationController *) navigationController
+{
+  if( navigationController != NULL ) {
+    s_currentNavigationController = navigationController;
+  }
+  
+}
++ (instancetype) getCurrentNavigationController
+{
+  return s_currentNavigationController;
+}
+
++ (instancetype) getFirstNavigationController
+{
+  return s_firstNavigationController;
+}
 
 @end
