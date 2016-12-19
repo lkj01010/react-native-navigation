@@ -1,5 +1,6 @@
 #import <UIKit/UIKit.h>
 #import "RCTBridge.h"
+#import "RCCNavigationController.h"
 
 extern NSString* const RCCViewControllerCancelReactTouchesNotification;
 
@@ -12,6 +13,7 @@ extern NSString* const RCCViewControllerCancelReactTouchesNotification;
 
 - (instancetype)initWithProps:(NSDictionary *)props children:(NSArray *)children globalProps:(NSDictionary *)globalProps bridge:(RCTBridge *)bridge;
 - (instancetype)initWithComponent:(NSString *)component passProps:(NSDictionary *)passProps navigatorStyle:(NSDictionary*)navigatorStyle globalProps:(NSDictionary *)globalProps bridge:(RCTBridge *)bridge;
+- (instancetype)initWithComponent:(NSString *)component passProps:(NSDictionary *)passProps navigatorStyle:(NSDictionary*)navigatorStyle globalProps:(NSDictionary *)globalProps bridge:(RCTBridge *)bridge navigationController:(RCCNavigationController *) navigationController;
 - (void)setStyleOnAppear;
 - (void)setStyleOnInit;
 - (void)setNavBarVisibilityChange:(BOOL)animated;

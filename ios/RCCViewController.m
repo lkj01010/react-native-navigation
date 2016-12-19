@@ -25,6 +25,7 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
 @property (nonatomic, strong) UIImageView *navBarHairlineImageView;
 @property (nonatomic, weak) id <UIGestureRecognizerDelegate> originalInteractivePopGestureDelegate;
 @property (nonatomic) NSString * screenId;
+@property (nonatomic) RCCNavigationController * navigationController;
 @end
 
 @implementation RCCViewController
@@ -89,6 +90,7 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
     
     // register the controller if we have an id
     NSString *componentId = props[@"id"];
+    NSLog(@"componentId %@ type %@",componentId,type);
     if (controller && componentId)
     {
         [[RCCManager sharedInstance] registerController:controller componentId:componentId componentType:type];
@@ -124,6 +126,12 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
 
 - (instancetype)initWithComponent:(NSString *)component passProps:(NSDictionary *)passProps navigatorStyle:(NSDictionary*)navigatorStyle globalProps:(NSDictionary *)globalProps bridge:(RCTBridge *)bridge
 {
+  return [self initWithComponent:component passProps:passProps navigatorStyle:navigatorStyle globalProps:globalProps bridge:bridge navigationController:NULL];
+
+}
+
+- (instancetype)initWithComponent:(NSString *)component passProps:(NSDictionary *)passProps navigatorStyle:(NSDictionary*)navigatorStyle globalProps:(NSDictionary *)globalProps bridge:(RCTBridge *)bridge navigationController:(RCCNavigationController *) navigationController
+{
   NSMutableDictionary *mergedProps = [NSMutableDictionary dictionaryWithDictionary:globalProps];
   [mergedProps addEntriesFromDictionary:passProps];
   
@@ -136,6 +144,8 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
   [self commonInit:reactView navigatorStyle:navigatorStyle props:passProps];
 
   self.screenId = component;
+  
+  self.navigationController = navigationController;
   return self;
 }
 
@@ -191,6 +201,8 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
        @"screen": self.screenId,
      }];
   }
+  
+  [RCCNavigationController setCurrentNavigationController:self.navigationController];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
