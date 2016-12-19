@@ -418,6 +418,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../../react-native/React/**",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = ReactNativeNavigation;
 				SKIP_INSTALL = YES;
