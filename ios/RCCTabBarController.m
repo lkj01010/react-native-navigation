@@ -115,7 +115,8 @@
     }
     else
     {
-      viewController.tabBarItem.badgeValue = [NSString stringWithFormat:@"%@", badge];
+      NSString *badgeStr =  [NSString stringWithFormat:@"%@", badge];
+      viewController.tabBarItem.badgeValue = [badgeStr isEqualToString: @"0"] ? nil : badgeStr;
     }
 
     [viewControllers addObject:viewController];
@@ -159,7 +160,9 @@
         }
         else
         {
-          viewController.tabBarItem.badgeValue = [NSString stringWithFormat:@"%@", badge];
+//          viewController.tabBarItem.badgeValue = [NSString stringWithFormat:@"%@", badge];
+          NSString *badgeStr =  [NSString stringWithFormat:@"%@", badge];
+          viewController.tabBarItem.badgeValue = [badgeStr isEqualToString: @"0"] ? nil : badgeStr;
         }
       }
     }

@@ -7,7 +7,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.WritableMap;
 import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.params.ContextualMenuParams;
 import com.reactnativenavigation.params.ScreenParams;
@@ -95,6 +97,11 @@ public class ScreenStack {
                     @Override
                     public void run() {
                         parent.removeView(previousScreen);
+
+                        // navigation event to JS
+                        WritableMap data = Arguments.createMap();
+                        data.putString("screen", nextScreen.screenParams.screenId);
+                        NavigationApplication.instance.sendNavigatorEvent("onChangeScreen", data);
                     }
                 });
             }
@@ -168,6 +175,11 @@ public class ScreenStack {
             public void run() {
                 toRemove.unmountReactView();
                 parent.removeView(toRemove);
+
+                // navigation event to JS
+                WritableMap data = Arguments.createMap();
+                data.putString("screen", "");
+                NavigationApplication.instance.sendNavigatorEvent("onChangeScreen", data);
             }
         });
 
@@ -176,7 +188,7 @@ public class ScreenStack {
         }
     }
 
-    private void swapScreens(boolean animated, final Screen toRemove, Screen previous, OnScreenPop onScreenPop) {
+    private void swapScreens(boolean animated, final Screen toRemove, final Screen previous, OnScreenPop onScreenPop) {
         readdPrevious(previous);
         previous.setStyle();
         toRemove.hide(animated, new Runnable() {
@@ -184,6 +196,11 @@ public class ScreenStack {
             public void run() {
                 toRemove.unmountReactView();
                 parent.removeView(toRemove);
+
+                // navigation event to JS
+                WritableMap data = Arguments.createMap();
+                data.putString("screen", previous.screenParams.screenId);
+                NavigationApplication.instance.sendNavigatorEvent("onChangeScreen", data);
             }
         });
 
