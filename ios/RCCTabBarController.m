@@ -2,6 +2,13 @@
 #import "RCCViewController.h"
 #import "RCTConvert.h"
 #import "RCCManager.h"
+#import "RCTBridge.h"
+#import "RCTEventDispatcher.h"
+
+@interface RCCTabBarController ()<UITabBarControllerDelegate>
+@property (nonatomic) NSInteger tabControllerIndex;   //当前选中的那个controller 的idx
+@property (nonatomic) id midTabIcon;
+@end
 
 @implementation RCCTabBarController
 
@@ -26,10 +33,15 @@
   self = [super init];
   if (!self) return nil;
   
+  self.delegate = self;
+  
   self.tabBar.translucent = YES; // default
   
   UIColor *buttonColor = nil;
   UIColor *selectedButtonColor = nil;
+  
+  self.midTabIcon = props[@"midTabIcon"];
+  
   NSDictionary *tabsStyle = props[@"style"];
   if (tabsStyle)
   {
@@ -61,8 +73,25 @@
   NSMutableArray *viewControllers = [NSMutableArray array];
 
   // go over all the tab bar items
-  for (NSDictionary *tabItemLayout in children)
+//  for (NSDictionary *tabItemLayout in children)
+  int midIndex = children.count / 2;
+  for (int i = 0; i < children.count; ++i)
   {
+    
+    // add Mid Tab
+    if (self.midTabIcon && i == midIndex) {
+      UIViewController *viewController = [[UIViewController alloc] init];
+      UIImage *midIconImage = [RCTConvert UIImage:self.midTabIcon];
+      midIconImage = [midIconImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+      viewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:midIconImage tag:0];
+      viewController.tabBarItem.imageInsets = UIEdgeInsetsMake(5,0,-5,0);
+      viewController.tabBarItem.accessibilityIdentifier = @"mid";
+      viewController.tabBarItem.selectedImage = midIconImage;
+      [viewControllers addObject:viewController];
+    }
+    
+    NSDictionary *tabItemLayout = children[i];
+    
     // make sure the layout is valid
     if (![tabItemLayout[@"type"] isEqualToString:@"TabBarControllerIOS.Item"]) continue;
     if (!tabItemLayout[@"props"]) continue;
@@ -90,7 +119,7 @@
     UIImage *iconImageSelected = nil;
     id selectedIcon = tabItemLayout[@"props"][@"selectedIcon"];
     if (selectedIcon) iconImageSelected = [RCTConvert UIImage:selectedIcon];
-
+    
     viewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:title image:iconImage tag:0];
     viewController.tabBarItem.accessibilityIdentifier = tabItemLayout[@"props"][@"testID"];
     viewController.tabBarItem.selectedImage = iconImageSelected;
@@ -218,6 +247,26 @@
     {
       completion();
     }
+}
+
+#pragma mark - delegate
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController{
+  if (self.midTabIcon) {
+    int curSelIdx = -1;
+    int tabCount = [self.viewControllers count];
+    int midIndex = tabCount / 2;
+    for (int i = 0; i<[self.viewControllers count]; ++i) {
+      if (viewController == [self.viewControllers objectAtIndex:i]) {
+        curSelIdx = i;
+      }
+    }
+    if (curSelIdx == midIndex) {
+      self.selectedViewController = [self.viewControllers objectAtIndex:self.tabControllerIndex];
+      [[[RCCManager sharedInstance] getBridge].eventDispatcher sendAppEventWithName:@"onPressMidTab" body:@ {}];
+    } else {
+      self.tabControllerIndex = curSelIdx;
+    }
+  }
 }
 
 @end

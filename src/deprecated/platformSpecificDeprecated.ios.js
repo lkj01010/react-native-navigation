@@ -65,7 +65,8 @@ function startTabBasedApp(params) {
       return (
         <TabBarControllerIOS
           id={controllerID + '_tabs'}
-          style={params.tabsStyle}>
+          midTabIcon={params.midTabIcon}
+          style={{...params.tabsStyle}}>
           {
             params.tabs.map(function(tab, index) {
               return (

@@ -2,6 +2,7 @@ package com.reactnativenavigation.views;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -34,6 +35,12 @@ public class BottomTabs extends AHBottomNavigation {
         }
     }
 
+    public void addMidTab(Drawable icon, OnTabSelectedListener onTabSelectedListener) {
+        AHBottomNavigationItem item = new AHBottomNavigationItem("mid", icon, Color.GRAY);
+        addMidItem(item);
+        setOnTabSelectedListener(onTabSelectedListener);
+    }
+
     public void setStyleFromScreen(StyleParams params) {
         setBackgroundColor(params.bottomTabsColor);
 
@@ -45,7 +52,7 @@ public class BottomTabs extends AHBottomNavigation {
             setAccentColor(params.selectedBottomTabsButtonColor.getColor());
         }
 
-        setForceTitlesDisplay(params.forceTitlesDisplay);
+//        setForceTitlesDisplay(params.forceTitlesDisplay);
 
         setVisibility(params.bottomTabsHidden, true);
     }
@@ -88,6 +95,7 @@ public class BottomTabs extends AHBottomNavigation {
         if (hasBadgeTextColor()) {
             setNotificationTextColor(AppStyle.appStyle.bottomTabBadgeTextColor.getColor());
         }
+        setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
     }
 
     private boolean hasBadgeTextColor() {

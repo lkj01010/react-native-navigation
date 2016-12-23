@@ -38,11 +38,13 @@ public class SideMenu extends DrawerLayout {
     }
 
     public void openDrawer(boolean animated) {
-        openDrawer(Gravity.LEFT, animated);
+//        openDrawer(Gravity.LEFT, animated);
+        openDrawer(Gravity.LEFT);
     }
 
     public void closeDrawer(boolean animated) {
-        closeDrawer(Gravity.LEFT, animated);
+//        closeDrawer(Gravity.LEFT, animated);
+        closeDrawer(Gravity.LEFT);
     }
 
     public void toggleVisible(boolean animated) {

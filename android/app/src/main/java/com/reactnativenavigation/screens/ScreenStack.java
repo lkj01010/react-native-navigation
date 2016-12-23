@@ -60,7 +60,15 @@ public class ScreenStack {
         screen.setOnDisplayListener(new Screen.OnDisplayListener() {
             @Override
             public void onDisplay() {
-                screen.show(initialScreenParams.animateScreenTransitions);
+                screen.show(initialScreenParams.animateScreenTransitions, new Runnable() {
+                    @Override
+                    public void run() {
+                        // navigation event to JS
+                        WritableMap data = Arguments.createMap();
+                        data.putString("screen", initialScreenParams.screenId);
+                        NavigationApplication.instance.sendNavigatorEvent("onChangeScreen", data);
+                    }
+                });
                 screen.setStyle();
             }
         });

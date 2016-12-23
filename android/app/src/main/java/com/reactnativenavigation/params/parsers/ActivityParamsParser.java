@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.reactnativenavigation.params.ActivityParams;
 import com.reactnativenavigation.params.AppStyle;
+import com.reactnativenavigation.react.ImageLoader;
 
 public class ActivityParamsParser extends Parser {
     public static ActivityParams parse(Bundle params) {
@@ -26,6 +27,10 @@ public class ActivityParamsParser extends Parser {
         }
 
         result.animateShow = params.getBoolean("animateShow", true);
+
+        if (hasKey(params, "midTabIcon")) {
+            result.midTabIcon = ImageLoader.loadImage(params.getString("midTabIcon"));
+        }
 
         return result;
     }

@@ -97,6 +97,9 @@ public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottom
 
     private void createBottomTabs() {
         bottomTabs = new BottomTabs(getContext());
+        if (params.midTabIcon != null) {
+            bottomTabs.addMidTab(params.midTabIcon, this);
+        }
         bottomTabs.addTabs(params.tabParams, this);
     }
 
@@ -300,6 +303,12 @@ public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottom
         NavigationApplication.instance.sendNavigatorEvent("onChangeScreen", data);
         EventBus.instance.post(new ScreenChangedEvent(getCurrentScreenStack().peek().getScreenParams()));
         return true;
+    }
+
+    @Override
+    public void onMidTabSelected() {
+        WritableMap data = Arguments.createMap();
+        NavigationApplication.instance.sendNavigatorEvent("onPressMidTab", data);
     }
 
     private void showNewStack(int position) {

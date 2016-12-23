@@ -160,7 +160,7 @@ public class FloatingActionButtonCoordinator {
         if (actionParams.backgroundColor.hasColor()) {
             action.setBackgroundTintList(ColorStateList.valueOf(actionParams.backgroundColor.getColor()));
         }
-        action.setSize(FloatingActionButton.SIZE_MINI);
+//        action.setSize(FloatingActionButton.SIZE_MINI);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             action.setCompatElevation(0);
         }
