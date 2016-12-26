@@ -206,7 +206,8 @@ function startTabBasedApp(params) {
   params.appStyle = convertStyleParams(params.appStyle);
   params.sideMenu = convertDrawerParamsToSideMenuParams(params.drawer);
   params.animateShow = convertAnimationType(params.animationType);
-  addTabIcon(params.midTab);
+  // addTabIcon(params.midTab);
+  params.midTabIcon = params.midTabIcon && (resolveAssetSource(params.midTabIcon)).uri;
 
   newPlatformSpecific.startApp(params);
 }
