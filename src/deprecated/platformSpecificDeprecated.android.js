@@ -183,7 +183,8 @@ function startTabBasedApp(params) {
 
   const newTabs = [];
 
-  params.tabs.forEach(function(tab, idx) {
+  params.tabs.forEach(function(oldTab, idx) {
+    const tab = {...oldTab};
     addNavigatorParams(tab, null, idx);
     addNavigatorButtons(tab, params.drawer);
     addNavigationStyleParams(tab);
