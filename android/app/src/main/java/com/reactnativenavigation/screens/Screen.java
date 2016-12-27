@@ -215,6 +215,14 @@ public abstract class Screen extends RelativeLayout implements Subscriber {
         screenAnimator.hide(animated, onAnimatedEnd);
     }
 
+    public void showBackScreen() {
+        screenAnimator.showBackScreen();
+    }
+
+    public void hideBackScreen() {
+        screenAnimator.hideBackScreen();
+    }
+
     public void showContextualMenu(ContextualMenuParams params, Callback onButtonClicked) {
         topBar.showContextualMenu(params, styleParams, onButtonClicked);
         setStatusBarColor(styleParams.contextualMenuStatusBarColor);

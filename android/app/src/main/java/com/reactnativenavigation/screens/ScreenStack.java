@@ -80,7 +80,7 @@ public class ScreenStack {
         addScreen(initialScreen, params);
     }
 
-    public void push(final ScreenParams params, LayoutParams layoutParams) {
+    public void push(final ScreenParams params, LayoutParams layoutParams, Runnable onNextScreenDisplay) {
         if (stack.empty()) {
             pushInitialScreenWithAnimation(params, layoutParams);
             return;
@@ -89,13 +89,14 @@ public class ScreenStack {
         Screen nextScreen = ScreenFactory.create(activity, params, leftButtonOnClickListener);
         final Screen previousScreen = stack.peek();
         if (isStackVisible) {
-            pushScreenToVisibleStack(layoutParams, nextScreen, previousScreen);
+            pushScreenToVisibleStack(layoutParams, nextScreen, previousScreen, onNextScreenDisplay);
         } else {
             pushScreenToInvisibleStack(layoutParams, nextScreen, previousScreen);
         }
     }
 
-    private void pushScreenToVisibleStack(LayoutParams layoutParams, final Screen nextScreen, final Screen previousScreen) {
+    private void pushScreenToVisibleStack(LayoutParams layoutParams, final Screen nextScreen,
+                                          final Screen previousScreen, final Runnable onNextScreenDisplay) {
         nextScreen.setVisibility(View.INVISIBLE);
         addScreen(nextScreen, layoutParams);
         nextScreen.setOnDisplayListener(new Screen.OnDisplayListener() {
@@ -112,6 +113,10 @@ public class ScreenStack {
                         NavigationApplication.instance.sendNavigatorEvent("onChangeScreen", data);
                     }
                 });
+                previousScreen.hideBackScreen();
+                if (onNextScreenDisplay != null) {
+                    onNextScreenDisplay.run();
+                }
             }
         });
     }
@@ -211,6 +216,7 @@ public class ScreenStack {
                 NavigationApplication.instance.sendNavigatorEvent("onChangeScreen", data);
             }
         });
+        previous.showBackScreen();
 
         if (onScreenPop != null) {
             onScreenPop.onScreenPopAnimationEnd();

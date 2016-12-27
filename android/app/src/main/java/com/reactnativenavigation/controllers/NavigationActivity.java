@@ -190,9 +190,9 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
 
     void showModal(ScreenParams screenParams) {
         overScreenLayout.playSoundEffect(SoundEffectConstants.CLICK);
-        if (overScreenLayout.stackSize() == 0 && layout instanceof BottomTabsLayout) {
-            ((BottomTabsLayout)layout).hideTabs();
-        }
+//        if (overScreenLayout.stackSize() == 0 && layout instanceof BottomTabsLayout) {
+//            ((BottomTabsLayout)layout).hideTabs();
+//        }
         overScreenLayout.push(screenParams);
     }
 
@@ -209,9 +209,9 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
         ScreenParams sp = new ScreenParams();
         sp.animateScreenTransitions = true;
         overScreenLayout.pop(sp);
-        if (overScreenLayout.stackSize() == 0 && layout instanceof BottomTabsLayout) {
-            ((BottomTabsLayout)layout).showTabs();
-        }
+//        if (overScreenLayout.stackSize() == 0 && layout instanceof BottomTabsLayout) {
+//            ((BottomTabsLayout)layout).showTabs();
+//        }
     }
 
 //    void dismissTopModal() {

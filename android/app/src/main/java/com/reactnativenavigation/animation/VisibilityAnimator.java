@@ -5,7 +5,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 
+import com.reactnativenavigation.utils.ViewUtils;
 import com.reactnativenavigation.views.ScrollDirectionListener;
 
 public class VisibilityAnimator {
@@ -100,10 +102,36 @@ public class VisibilityAnimator {
         return visibilityState == VisibilityState.Hidden || visibilityState == VisibilityState.AnimateHide;
     }
 
+//    private ObjectAnimator createAnimator(final boolean show) {
+//        ObjectAnimator animator = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, show ? SHOW_END_VALUE : hiddenEndValue);
+//        animator.setDuration(DURATION);
+//        animator.setInterpolator(new LinearOutSlowInInterpolator());
+//        animator.addListener(new AnimatorListenerAdapter() {
+//            @Override
+//            public void onAnimationStart(Animator animation) {
+//                visibilityState = show ? VisibilityState.AnimateShow : VisibilityState.AnimateHide;
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animator animation) {
+//                visibilityState = show ? VisibilityState.Shown : VisibilityState.Hidden;
+//            }
+//        });
+//        return animator;
+//    }
+
+    // lkj: change to Horizontal animation
     private ObjectAnimator createAnimator(final boolean show) {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, show ? SHOW_END_VALUE : hiddenEndValue);
-        animator.setDuration(DURATION);
-        animator.setInterpolator(new LinearOutSlowInInterpolator());
+        final float translate_x = ViewUtils.getScreenWidth();
+        ObjectAnimator animator;
+        if (show) {
+            animator = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, -translate_x, 0);
+        }
+        else {
+            animator = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, 0, -translate_x);
+        }
+        animator.setDuration(250);
+        animator.setInterpolator(new DecelerateInterpolator());
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
