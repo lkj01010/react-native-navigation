@@ -74,7 +74,7 @@
 
   // go over all the tab bar items
 //  for (NSDictionary *tabItemLayout in children)
-  int midIndex = children.count / 2;
+  int midIndex = (int)children.count / 2;
   for (int i = 0; i < children.count; ++i)
   {
     
@@ -84,7 +84,7 @@
       UIImage *midIconImage = [RCTConvert UIImage:self.midTabIcon];
       midIconImage = [midIconImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
       viewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:midIconImage tag:0];
-      viewController.tabBarItem.imageInsets = UIEdgeInsetsMake(5,0,-5,0);
+      viewController.tabBarItem.imageInsets = UIEdgeInsetsMake(6,0,-6,0);
       viewController.tabBarItem.accessibilityIdentifier = @"mid";
       viewController.tabBarItem.selectedImage = midIconImage;
       [viewControllers addObject:viewController];
@@ -253,8 +253,8 @@
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController{
   if (self.midTabIcon) {
     int curSelIdx = -1;
-    int tabCount = [self.viewControllers count];
-    int midIndex = tabCount / 2;
+    NSUInteger tabCount = [self.viewControllers count];
+    NSUInteger midIndex = tabCount / 2;
     for (int i = 0; i<[self.viewControllers count]; ++i) {
       if (viewController == [self.viewControllers objectAtIndex:i]) {
         curSelIdx = i;
