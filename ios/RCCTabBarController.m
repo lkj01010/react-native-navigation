@@ -52,6 +52,11 @@
       self.tabBar.tintColor = color;
       buttonColor = color;
       selectedButtonColor = color;
+      
+//      UITabBarItem *item = [self.tabBar.items objectAtIndex:0];
+//      [item setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+//                                    [UIColor darkGrayColor], UITextAttributeTextColor, nil]
+//                          forState:UIControlStateNormal];
     }
     
     NSString *tabBarSelectedButtonColor = tabsStyle[@"tabBarSelectedButtonColor"];

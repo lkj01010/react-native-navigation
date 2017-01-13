@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.SoundEffectConstants;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
@@ -32,6 +33,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+
 public class NavigationActivity extends AppCompatActivity implements DefaultHardwareBackBtnHandler, Subscriber {
 
     /**
@@ -49,6 +51,15 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     private Layout layout;
     private SingleScreenLayout overScreenLayout;
     private @Nullable PermissionListener mPermissionListener;
+
+    private long exitTime = 0;
+
+    // this is hack code, relate to  changed by out model
+    public RootOverlayListener rootOverlayListener;
+
+    public interface RootOverlayListener {
+        boolean dismissOnBackPress();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +142,17 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
         }
     }
 
+    private void tryToExit() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            Toast.makeText(getApplicationContext(), "再按一次退出程序",
+                    Toast.LENGTH_SHORT).show();
+            exitTime = System.currentTimeMillis();
+        } else {
+            finish();
+            System.exit(0);
+        }
+    }
+
     @Override
     public void invokeDefaultOnBackPressed() {
         super.onBackPressed();
@@ -138,8 +160,16 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
 
     @Override
     public void onBackPressed() {
-        if (layout != null && !layout.onBackPressed()) {
-            NavigationApplication.instance.getReactGateway().onBackPressed();
+        if (rootOverlayListener != null && rootOverlayListener.dismissOnBackPress()) {
+        }
+        else if (overScreenLayout != null && overScreenLayout.stackSize() > 0) {
+            dismissTopModal();
+        }
+        else if (layout != null && layout.onBackPressed()) {
+        }
+        else {
+//            NavigationApplication.instance.getReactGateway().onBackPressed();
+            tryToExit();
         }
     }
 
