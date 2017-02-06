@@ -8,7 +8,9 @@ import android.view.SoundEffectConstants;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.modules.core.PermissionListener;
 import com.reactnativenavigation.NavigationApplication;
@@ -105,6 +107,9 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
         currentActivity = this;
         NavigationApplication.instance.getReactGateway().onResumeActivity(this, this);
         EventBus.instance.register(this);
+
+        WritableMap data = Arguments.createMap();
+        NavigationApplication.instance.sendNavigatorEvent("onResume", data);
     }
 
     @Override
