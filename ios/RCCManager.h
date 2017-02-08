@@ -14,6 +14,8 @@
 
 -(void)registerController:(UIViewController*)controller componentId:(NSString*)componentId componentType:(NSString*)componentType;
 -(id)getControllerWithId:(NSString*)componentId componentType:(NSString*)componentType;
+// lkj:
+-(id)getTabNavigationController;
 -(void)unregisterController:(UIViewController*)vc;
 
 -(void)clearModuleRegistry;

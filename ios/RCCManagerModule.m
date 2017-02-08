@@ -268,7 +268,10 @@ TabBarControllerIOS:(NSString*)controllerId performAction:(NSString*)performActi
         return;
     }
     
-    RCCTabBarController* controller = [[RCCManager sharedInstance] getControllerWithId:controllerId componentType:@"TabBarControllerIOS"];
+//    RCCTabBarController* controller = [[RCCManager sharedInstance] getControllerWithId:controllerId componentType:@"TabBarControllerIOS"];
+    // lkj: replace ->
+    RCCTabBarController *controller = [[RCCManager sharedIntance] getTabNavigationController];
+    // ]]
     if (!controller || ![controller isKindOfClass:[RCCTabBarController class]])
     {
         [RCCManagerModule handleRCTPromiseRejectBlock:reject

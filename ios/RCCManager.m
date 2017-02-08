@@ -45,6 +45,27 @@
 
 -(void)clearModuleRegistry
 {
+//  for (id val in [self.modulesRegistry allValues]) {
+//      if([val isKindOfClass:[NSDictionary class]]) {
+//      NSDictionary *objDict = (NSDictionary*)val;
+//      for(id ctrl in [objDict allValues]) {
+//        if([ctrl isKindOfClass: [UITabBarController class]]) {
+//          UITabBarController *tabBarCtrl = (UITabBarController*)ctrl;
+//          [tabBarCtrl removeFromParentViewController];
+//        }
+//        else if([ctrl isKindOfClass: [UINavigationController class]]) {
+//          UINavigationController *navCtrl = (UINavigationController*)ctrl;
+//          [navCtrl removeFromParentViewController];
+//        }
+//      }
+//    }
+//  }
+  
+//  for(NSString * key in [self.modulesRegistry allKeys]) {
+//    if ([key isEqualToString:@"TabBarControllerIOS"] == FALSE) {
+//        [self.modulesRegistry removeObjectForKey:key];
+//    }
+//  }
   [self.modulesRegistry removeAllObjects];
 }
 
@@ -114,6 +135,20 @@
   }
 
   return component;
+}
+
+// 从app登出回到login场景时，js层面的component并没有释放，即不会componentWillUnmount
+//（怎么释放暂时没查出来，尝试在clearModuleRegistry中添加释放逻辑未果）
+// 遂每次查找tabNav时，不验证id，先让逻辑正确
+// TODO: 找出让js层面释放component的办法
+-(id)getTabNavigationController {
+  NSMutableDictionary *tabNavDic = self.modulesRegistry[@"TabBarControllerIOS"];
+  if (tabNavDic.count > 0) {
+    return [tabNavDic allValues][0];
+  }
+  else {
+    return nil;
+  }
 }
 
 -(void)initBridgeWithBundleURL:(NSURL *)bundleURL
