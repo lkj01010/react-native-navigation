@@ -2,6 +2,7 @@ package com.reactnativenavigation.controllers;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 
 import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.params.StyleParams;
@@ -22,6 +24,9 @@ public abstract class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setSplashLayout();
         setStatusBarColor();
+
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
     @Override
