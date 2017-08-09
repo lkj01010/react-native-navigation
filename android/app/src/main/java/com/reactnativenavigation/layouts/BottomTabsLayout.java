@@ -3,6 +3,7 @@ package com.reactnativenavigation.layouts;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -32,7 +33,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottomNavigation.OnTabSelectedListener {
-
+    private String TAG = "BottomTabsLayout";
     private final AppCompatActivity activity;
     private ActivityParams params;
     private SnackbarAndFabContainer snackbarAndFabContainer;
@@ -49,6 +50,7 @@ public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottom
         this.sideMenuParams = params.sideMenuParams;
         screenStacks = new ScreenStack[params.tabParams.size()];
         createLayout();
+        Log.i("BottomTabsLayout","create:" + this.toString());
     }
 
     private void createLayout() {
@@ -77,6 +79,7 @@ public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottom
 
     private void createAndAddScreens(int position) {
         ScreenParams screenParams = params.tabParams.get(position);
+        Log.i(TAG,"createAndAddScreens:" + screenParams.tabLabel + ":" + screenParams.getNavigatorId());
         ScreenStack newStack = new ScreenStack(activity, getScreenStackParent(), screenParams.getNavigatorId(), this);
         newStack.pushInitialScreen(screenParams, createScreenLayoutParams(screenParams));
         screenStacks[position] = newStack;
@@ -235,6 +238,7 @@ public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottom
 
     @Override
     public void push(final ScreenParams params) {
+        Log.i(TAG,"push:" + params.tabLabel + ":" + params.getNavigatorId());
         ScreenStack screenStack = getScreenStack(params.getNavigatorId());
         screenStack.push(params, createScreenLayoutParams(params), new Runnable() {
             @Override
@@ -249,6 +253,7 @@ public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottom
 
     @Override
     public void pop(ScreenParams params) {
+        Log.i(TAG,"pop:" + params.tabLabel + ":" + params.getNavigatorId());
         getCurrentScreenStack().pop(params.animateScreenTransitions, new ScreenStack.OnScreenPop() {
             @Override
             public void onScreenPopAnimationEnd() {
@@ -260,6 +265,7 @@ public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottom
 
     @Override
     public void popToRoot(ScreenParams params) {
+        Log.i(TAG,"popToRoot:" + params.tabLabel + ":" + params.getNavigatorId());
         getCurrentScreenStack().popToRoot(params.animateScreenTransitions);
         setBottomTabsStyleFromCurrentScreen();
         EventBus.instance.post(new ScreenChangedEvent(getCurrentScreenStack().peek().getScreenParams()));
@@ -267,6 +273,7 @@ public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottom
 
     @Override
     public void newStack(ScreenParams params) {
+        Log.i(TAG,"newStack:" + params.tabLabel + ":" + params.getNavigatorId());
         ScreenStack currentScreenStack = getCurrentScreenStack();
         removeView(currentScreenStack.peek());
         currentScreenStack.destroy();
@@ -282,6 +289,7 @@ public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottom
 
     @Override
     public void destroy() {
+        Log.i(TAG,"distroy");
         snackbarAndFabContainer.destroy();
         for (ScreenStack screenStack : screenStacks) {
             screenStack.destroy();
@@ -357,6 +365,7 @@ public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottom
 
     private int getScreenStackIndex(String navigatorId) throws ScreenStackNotFoundException {
         for (int i = 0; i < screenStacks.length; i++) {
+            Log.i("BottomTabsLayout","NavigatorId:" + screenStacks[i].getNavigatorId() + ":" + screenStacks[i].toString());
             if (screenStacks[i].getNavigatorId().equals(navigatorId)) {
                 return i;
             }
